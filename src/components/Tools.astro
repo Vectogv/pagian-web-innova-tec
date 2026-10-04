@@ -1,12 +1,41 @@
 ---
-const tools = ["WhatsApp", "Gmail", "Google Sheets", "Google Calendar", "Excel", "HubSpot", "Shopify", "WooCommerce", "Notion", "Slack", "Telegram", "PostgreSQL", "Stripe"];
+// Mapa de conexiones: de dónde llegan los clientes → Innova Tec (n8n) → dónde vive la información y dónde se cierra el negocio.
+// Cada herramienta aparece una sola vez.
+const incoming = ["WhatsApp", "Telegram", "Gmail"];
+const outgoing = [
+  { title: "Donde vive tu información", tools: ["Google Sheets", "Excel", "PostgreSQL", "Notion"] },
+  { title: "Donde se cierra el negocio", tools: ["HubSpot", "Shopify", "WooCommerce", "Stripe", "Google Calendar", "Slack"] },
+];
 ---
-<section class="tools" aria-label="Herramientas que conectamos">
+<section class="connect" aria-labelledby="connect-title">
   <div class="wrap">
-    <p>
-      Trabajamos con lo que ya usas:{" "}
-      {tools.map((t, i) => <><b>{t}</b>{i < tools.length - 1 ? ", " : " "}</>)}
-      y cualquier otra app que tenga API.
-    </p>
+    <div class="sec-head">
+      <span class="node-tag">02 · Conexiones</span>
+      <h2 id="connect-title">Trabajamos con lo que ya usas</h2>
+      <p class="muted">Y con cualquier otra app que tenga API. Tu equipo sigue en sus herramientas; nosotros las conectamos.</p>
+    </div>
+
+    <div class="map">
+      <div class="map-group map-in">
+        <span class="label">Donde llegan tus clientes</span>
+        <ul>{incoming.map((t) => <li>{t}</li>)}</ul>
+      </div>
+
+      <div class="map-hub">
+        <span class="map-pulse" aria-hidden="true"></span>
+        <b>Innova Tec</b>
+        <span class="label">Orquesta con n8n</span>
+        <span class="map-pulse out" aria-hidden="true"></span>
+      </div>
+
+      <div class="map-out">
+        {outgoing.map((g) => (
+          <div class="map-group">
+            <span class="label">{g.title}</span>
+            <ul>{g.tools.map((t) => <li>{t}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 </section>

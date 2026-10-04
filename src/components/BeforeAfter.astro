@@ -1,5 +1,5 @@
 ---
-// Cada fila: la tarea manual de hoy frente a la tarea automática que la reemplaza
+// Tres actos: el problema (un día cualquiera, horas de ejemplo) → la transformación (el nodo que reemplaza cada tarea) → el resultado
 const icons = {
   chat: '<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/>',
   sheet: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h16M4 15h16M10 4v16"/>',
@@ -7,43 +7,50 @@ const icons = {
   clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
 };
 const rows = [
-  { manual: "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
+  { time: "08:00", manual: "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
     icon: "chat", title: "Cada mensaje se detecta al instante", tool: "WhatsApp" },
-  { manual: "Copias nombre, teléfono y pedido a una hoja de Excel.",
+  { time: "10:30", manual: "Copias nombre, teléfono y pedido a una hoja de Excel.",
     icon: "sheet", title: "Los datos se guardan solos", tool: "Google Sheets" },
-  { manual: "Reenvías el contacto a ventas por correo o por chat.",
+  { time: "15:00", manual: "Reenvías el contacto a ventas por correo o por chat.",
     icon: "mail", title: "Ventas recibe un resumen del cliente", tool: "Gmail" },
-  { manual: "Los mensajes que llegan de noche esperan hasta el día siguiente.",
+  { time: "22:00", manual: "Los mensajes que llegan de noche esperan hasta el día siguiente.",
     icon: "clock", title: "El cliente recibe respuesta a cualquier hora", tool: "Respuesta automática" },
 ];
 ---
-<section id="antes-despues" class="tint">
+<section class="transform" aria-labelledby="transform-title">
   <div class="wrap">
-    <div class="section-head">
-      <span class="label">Antes y después</span>
-      <h2>El mismo proceso, sin trabajo manual</h2>
+    <div class="sec-head">
+      <span class="node-tag">03 · Transformación</span>
+      <h2 id="transform-title">Así cambia un día de trabajo</h2>
     </div>
 
-    <div class="swap" data-animate>
-      <div class="swap-head" aria-hidden="true">
-        <span class="label">Hoy, a mano</span>
+    <div class="acts" data-animate>
+      <div class="acts-head" aria-hidden="true">
+        <span class="label act-problem">Problema · un día cualquiera</span>
         <span></span>
-        <span class="label">Con automatización</span>
+        <span class="label act-flow">Transformación · el flujo</span>
       </div>
-      <ol>
+      <ol class="acts-rows">
         {rows.map((r) => (
           <li>
-            <p class="swap-before"><span class="sr-only">Hoy: </span>{r.manual}</p>
-            <span class="swap-arrow" aria-hidden="true">→</span>
-            <div class="swap-after">
-              <span class="swap-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={icons[r.icon]} /></span>
+            <div class="act-before">
+              <time class="label">{r.time}</time>
+              <p><span class="sr-only">Hoy: </span>{r.manual}</p>
+            </div>
+            <span class="act-wire" aria-hidden="true"></span>
+            <div class="act-after">
+              <span class="act-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={icons[r.icon]} /></span>
               <div><b><span class="sr-only">Con automatización: </span>{r.title}</b><small>{r.tool}</small></div>
             </div>
           </li>
         ))}
       </ol>
+      <div class="act-result">
+        <span class="label">Resultado</span>
+        <p class="act-result-big">Cada cliente atendido, a cualquier hora.</p>
+        <p>Ningún mensaje se queda sin respuesta y ventas recibe cada cliente en el momento en que escribe.</p>
+      </div>
     </div>
-
-    <p class="compare-result"><b>Resultado:</b> ningún mensaje se queda sin respuesta y ventas recibe cada cliente en el momento en que escribe.</p>
+    <p class="acts-note label">Horas de ejemplo</p>
   </div>
 </section>

@@ -1,70 +1,73 @@
 ---
+// Casos editoriales: cada uno con una composición propia y su foto anotada con el recorrido del flujo.
+// marks: puntos del flujo sobre la foto, en % del recuadro (x, y); se unen en orden con una línea punteada.
 const cases = [
-  { id: "restaurantes", alt: "Salón de un restaurante con mesas listas para el servicio", name: "Restaurantes",
+  { id: "restaurantes", name: "Restaurantes", variant: "dominant", service: "Chatbots y asistentes virtuales",
+    alt: "Salón de un restaurante con mesas listas para el servicio",
     what: "Los pedidos de WhatsApp llegan ordenados a cocina y caja, y el cliente recibe la confirmación al instante.",
-    removes: "Anotar pedidos a mano y confirmar uno por uno.", tools: "WhatsApp · Google Sheets · Telegram" },
-  { id: "clinicas", alt: "Profesional de la salud trabajando en un portátil junto a un estetoscopio", name: "Clínicas y consultorios",
+    removes: "Anotar pedidos a mano y confirmar uno por uno.", tools: "WhatsApp · Google Sheets · Telegram",
+    marks: [{ x: 40, y: 38, label: "Pedido por WhatsApp" }, { x: 62, y: 28, label: "Comanda a cocina" }, { x: 84, y: 55, label: "Cobro en caja ✓" }] },
+  { id: "clinicas", name: "Clínicas y consultorios", variant: "split", service: "Chatbots y asistentes virtuales",
+    alt: "Profesional de la salud trabajando en un portátil junto a un estetoscopio",
     what: "La agenda se llena sola, cada paciente recibe un recordatorio el día anterior y puede reprogramar sin llamar.",
-    removes: "Llamadas de confirmación y citas olvidadas.", tools: "WhatsApp · Google Calendar · Gmail" },
-  { id: "tiendas", alt: "Interior de una tienda de ropa con estanterías y mostrador", name: "Tiendas y e-commerce",
+    removes: "Llamadas de confirmación y citas olvidadas.", tools: "WhatsApp · Google Calendar · Gmail",
+    marks: [{ x: 30, y: 30, label: "Cita agendada" }, { x: 45, y: 52, label: "Recordatorio un día antes" }, { x: 30, y: 76, label: "Reprogramación sin llamar ✓" }] },
+  { id: "tiendas", name: "Tiendas y e-commerce", variant: "quote", service: "Integraciones y APIs",
+    alt: "Interior de una tienda de ropa con estanterías y mostrador",
     what: "El inventario se sincroniza en cada venta, la factura se genera sola y te avisa cuando un producto se agota.",
-    removes: "Cuadrar inventario en Excel al final del día.", tools: "Shopify · WooCommerce · Excel" },
-  { id: "inmobiliarias", alt: "Llaves junto a una pequeña maqueta de casa", name: "Inmobiliarias",
+    removes: "Cuadrar inventario en Excel al final del día.", tools: "Shopify · WooCommerce · Excel",
+    marks: [{ x: 22, y: 32, label: "Venta" }, { x: 52, y: 52, label: "Inventario" }, { x: 34, y: 80, label: "Factura ✓" }] },
+  { id: "inmobiliarias", name: "Inmobiliarias", variant: "offset", service: "Flujos con n8n",
+    alt: "Llaves junto a una pequeña maqueta de casa",
     what: "Los interesados de portales y formularios se clasifican y llegan al asesor correcto en minutos.",
-    removes: "Repartir contactos a mano y leads que nadie atiende.", tools: "Formularios web · HubSpot · WhatsApp" },
-  { id: "servicios", alt: "Oficina moderna con un pasillo de salas de reunión", name: "Servicios profesionales",
+    removes: "Repartir contactos a mano y leads que nadie atiende.", tools: "Formularios web · HubSpot · WhatsApp",
+    marks: [{ x: 28, y: 76, label: "Interesado desde el portal" }, { x: 60, y: 40, label: "Asignado al asesor" }, { x: 84, y: 20, label: "Seguimiento por WhatsApp ✓" }] },
+  { id: "servicios", name: "Servicios profesionales", variant: "strip", service: "Flujos con n8n",
+    alt: "Oficina moderna con un pasillo de salas de reunión",
     what: "Propuestas, contratos y seguimiento de cada cliente sin perder un correo.",
-    removes: "Buscar documentos y recordar a quién responder.", tools: "Gmail · Google Drive · Notion" },
+    removes: "Buscar documentos y recordar a quién responder.", tools: "Gmail · Google Drive · Notion",
+    marks: [{ x: 16, y: 58, label: "Propuesta enviada" }, { x: 50, y: 42, label: "Contrato firmado" }, { x: 84, y: 58, label: "Seguimiento al día ✓" }] },
 ];
+const num = (i: number) => String(i + 1).padStart(2, "0");
 ---
-<section id="casos">
+<section class="cases-ed" id="casos" aria-labelledby="cases-title">
   <div class="wrap">
-    <div class="section-head">
-      <span class="label">Casos de uso</span>
-      <h2>Elige tu tipo de negocio</h2>
+    <div class="sec-head">
+      <span class="node-tag">04 · En tu negocio</span>
+      <h2 id="cases-title">Así se ve en negocios como el tuyo</h2>
+      <p class="muted">Cinco ejemplos. Los números sobre cada foto marcan por dónde pasa el flujo.</p>
     </div>
-    <div class="cases">
-      <div class="case-tabs" role="tablist" aria-label="Tipo de negocio">
-        {cases.map((c, i) => (
-          <button id={`tab-${c.id}`} role="tab" aria-selected={i === 0 ? "true" : "false"} aria-controls={`panel-${c.id}`} tabindex={i === 0 ? 0 : -1}>{c.name}</button>
-        ))}
-      </div>
-      {cases.map((c, i) => (
-        <div class="case-panel" id={`panel-${c.id}`} role="tabpanel" aria-labelledby={`tab-${c.id}`} hidden={i !== 0}>
-          <figure class="photo case-photo">
-            <img src={`/fotos/${c.id}.jpg`} alt={c.alt} width="1200" height="800" loading={i === 0 ? "eager" : "lazy"} decoding="async">
-          </figure>
-          <p>{c.what}</p>
-          <dl>
+    <nav class="case-index" aria-label="Ir a un caso">
+      {cases.map((c, i) => <a href={`#caso-${c.id}`}><span>{num(i)}</span>{c.name}</a>)}
+    </nav>
+
+    {cases.map((c, i) => (
+      <article class={`case case--${c.variant}`} id={`caso-${c.id}`} aria-labelledby={`caso-${c.id}-t`}>
+        <figure class="annot" data-animate>
+          <img src={`/fotos/${c.id}.jpg`} alt={c.alt} width="1200" height="800" loading="lazy" decoding="async">
+          <svg class="annot-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points={c.marks.map((m) => `${m.x},${m.y}`).join(" ")} />
+          </svg>
+          <ol class="annot-marks" aria-hidden="true">
+            {c.marks.map((m, k) => (
+              <li class:list={{ flip: m.x > 62 }} style={`left:${m.x}%;top:${m.y}%`}><b>{k + 1}</b><span>{m.label}</span></li>
+            ))}
+          </ol>
+        </figure>
+        <div class="case-body">
+          <span class="label">Caso {num(i)}</span>
+          <h3 id={`caso-${c.id}-t`}>{c.name}</h3>
+          <p class="case-what">{c.what}</p>
+          <ol class="annot-legend" aria-label="Recorrido del flujo">
+            {c.marks.map((m) => <li>{m.label}</li>)}
+          </ol>
+          <dl class="case-meta">
             <div><dt class="label">Se elimina</dt><dd>{c.removes}</dd></div>
             <div><dt class="label">Herramientas</dt><dd>{c.tools}</dd></div>
           </dl>
-          <a href="/contacto" class="btn btn-tertiary">Quiero esto para mi negocio</a>
+          <a href={`/contacto?servicio=${encodeURIComponent(c.service)}`} class="btn btn-tertiary">Quiero esto para mi negocio</a>
         </div>
-      ))}
-    </div>
+      </article>
+    ))}
   </div>
 </section>
-
-<script>
-  const tabs = [...document.querySelectorAll<HTMLButtonElement>(".case-tabs [role=tab]")];
-  const select = (tab: HTMLButtonElement) => {
-    tabs.forEach((t) => {
-      const on = t === tab;
-      t.setAttribute("aria-selected", String(on));
-      t.tabIndex = on ? 0 : -1;
-      document.getElementById(t.getAttribute("aria-controls")!)!.hidden = !on;
-    });
-  };
-  tabs.forEach((tab, i) => {
-    tab.addEventListener("click", () => select(tab));
-    tab.addEventListener("keydown", (e) => {
-      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
-      if (!step) return;
-      e.preventDefault();
-      const next = tabs[(i + step + tabs.length) % tabs.length];
-      select(next);
-      next.focus();
-    });
-  });
-</script>

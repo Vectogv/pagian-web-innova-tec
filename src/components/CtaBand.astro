@@ -1,9 +1,32 @@
-<section class="closing cta-band">
+---
+// Salida: la pregunta se responde aquí mismo; se abre WhatsApp con la tarea escrita
+import { WHATSAPP } from "../config.js";
+const { tag = "Salida" } = Astro.props;
+---
+<section class="closing outro">
   <div class="wrap">
-    <h2>¿Qué tarea te gustaría dejar de hacer a mano?</h2>
-    <div class="actions">
-      <a href="/contacto" class="btn btn-primary">Agendar diagnóstico gratuito</a>
-      <a href="/planes" class="btn btn-tertiary">Ver planes y precios</a>
-    </div>
+    <span class="node-tag">{tag}</span>
+    <h2 class="outro-q"><label for="tarea">¿Qué tarea te gustaría dejar de hacer a mano?</label></h2>
+    <form class="outro-form" id="outro-form" data-wa={WHATSAPP} novalidate>
+      <input id="tarea" name="tarea" maxlength="300" autocomplete="off" placeholder="Ej.: copiar los pedidos de WhatsApp a Excel" required>
+      <button class="btn btn-primary" type="submit">Enviar por WhatsApp</button>
+      <span class="error" hidden>Escribe la tarea en una frase y te respondemos con una idea para automatizarla.</span>
+    </form>
+    <p class="outro-alt">O <a href="/planes">mira los planes y precios</a> · <a href="/contacto">usa el formulario completo</a></p>
   </div>
 </section>
+
+<script>
+  const form = document.getElementById("outro-form") as HTMLFormElement | null;
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = form.querySelector("input")!;
+    const error = form.querySelector(".error") as HTMLElement;
+    const task = input.value.trim();
+    error.hidden = task !== "";
+    input.setAttribute("aria-invalid", String(task === ""));
+    if (!task) return input.focus();
+    const text = `Hola Innova Tec, me gustaría dejar de hacer a mano esto: ${task}`;
+    window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`, "_blank");
+  });
+</script>

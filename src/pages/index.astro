@@ -5,14 +5,18 @@ import Tools from "../components/Tools.astro";
 import BeforeAfter from "../components/BeforeAfter.astro";
 import Cases from "../components/Cases.astro";
 import CtaBand from "../components/CtaBand.astro";
+import "../styles/home.css";
 ---
 <Base
   title="Innova Tec | Automatización y Software a Medida"
   description="Innova Tec: automatizaciones con n8n, chatbots, integraciones y desarrollo de software a medida para pequeñas y medianas empresas."
 >
-  <Hero />
-  <Tools />
-  <BeforeAfter />
-  <Cases />
-  <CtaBand />
+  <!-- El Inicio se lee como un flujo: "el cable" recorre la página y cada sección es un nodo -->
+  <div class="flow-page">
+    <Hero />
+    <Tools />
+    <BeforeAfter />
+    <Cases />
+    <CtaBand tag="05 · Salida" />
+  </div>
 </Base>

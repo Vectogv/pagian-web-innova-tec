@@ -3,7 +3,7 @@ const { crumb, title, intro } = Astro.props;
 ---
 <header class="page-head">
   <div class="wrap">
-    <span class="label"><a href="/">Inicio</a> / {crumb}</span>
+    <span class="node-tag"><a href="/">Inicio</a> / {crumb}</span>
     <h1>{title}</h1>
     {intro && <p class="muted">{intro}</p>}
   </div>
