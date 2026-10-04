@@ -15,7 +15,8 @@ Al hacer cambios:
 - Efectos pesados (3D, animaciones) son opcionales: si WebGL falla, la página se ve igual sin el efecto; respetar `prefers-reduced-motion`; pausar cuando no están en pantalla; limitar `devicePixelRatio` a 2.
 - Dependencias instaladas con npm (no CDN), para que funcione sin depender de servicios externos.
 - Compatibilidad con navegadores actuales: Chrome, Edge, Firefox y Safari (incluido Safari de iPhone).
-- Antes de dar un cambio por terminado: `npm run build` sin errores y revisar en ancho de celular y de escritorio.
+- Celular y PC tienen la misma importancia: ninguna versión es "secundaria".
+- Antes de dar un cambio por terminado: `npm run build` sin errores y revisar en celular (360px), tablet (768px) y escritorio (1280px+).
 
 ## Datos editables
 - Contacto (WhatsApp, correo): `src/config.js`.

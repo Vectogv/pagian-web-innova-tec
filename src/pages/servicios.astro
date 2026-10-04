@@ -1,0 +1,20 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Services from "../components/Services.astro";
+import Process from "../components/Process.astro";
+import CtaBand from "../components/CtaBand.astro";
+---
+<Base
+  title="Servicios | Innova Tec"
+  description="Flujos con n8n, chatbots para WhatsApp, software a medida, integraciones y reportes automáticos para pymes."
+>
+  <PageHeader
+    crumb="Servicios"
+    title="Automatización y software hechos para tu operación"
+    intro="Elegimos contigo qué automatizar primero, lo construimos y lo dejamos funcionando. Estos son los frentes en los que trabajamos."
+  />
+  <Services />
+  <Process />
+  <CtaBand />
+</Base>

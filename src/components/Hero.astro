@@ -1,21 +1,21 @@
 <header class="hero">
-  <canvas id="graph" aria-hidden="true"></canvas>
-  <div class="wrap">
+  <div class="wrap hero-top">
     <div class="hero-copy">
-      <span class="label">Automatización · IA · Software a medida</span>
+      <span class="label">Automatización · Integraciones · Software a medida</span>
       <h1>Las tareas repetitivas de tu negocio, resueltas por flujos que trabajan solos.</h1>
-      <p>Conectamos tus herramientas con n8n, creamos asistentes con IA y desarrollamos el software que tu operación necesita. Tú defines el proceso; nosotros lo automatizamos.</p>
+      <p>Conectamos tus herramientas con n8n, creamos chatbots y desarrollamos el software que tu operación necesita.</p>
       <div class="actions">
-        <a href="#contacto" class="btn btn-primary">Agendar diagnóstico gratuito</a>
-        <a href="#casos" class="btn btn-secondary">Ver casos de uso</a>
+        <a href="/contacto" class="btn btn-primary">Agendar diagnóstico gratuito</a>
+        <a href="#casos" class="btn btn-tertiary">Ver casos de uso</a>
       </div>
     </div>
+    <div class="hero-graph"><canvas id="graph" aria-hidden="true"></canvas></div>
   </div>
 </header>
 
 <script>
-  // Grafo 3D de flujos: nodos por capas (disparador → IA → apps → avisos) y pulsos que recorren
-  // las conexiones capa por capa, como una ejecución de n8n.
+  // Grafo 3D de flujos: nodos por capas (disparador → reglas → apps → avisos). Cada nodo es un punto de luz
+  // con anillo y halo; los pulsos recorren las conexiones capa por capa y encienden el nodo al que llegan.
   import * as THREE from "three";
 
   const canvas = document.getElementById("graph") as HTMLCanvasElement;
@@ -24,7 +24,20 @@
   try {
     init();
   } catch {
-    canvas.remove(); // sin WebGL la página se ve igual, solo sin fondo
+    canvas.remove(); // sin WebGL la página se ve igual, solo sin el grafo
+  }
+
+  function glowTexture() {
+    const c = document.createElement("canvas");
+    c.width = c.height = 64;
+    const g = c.getContext("2d")!;
+    const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, "rgba(255,255,255,1)");
+    grad.addColorStop(0.35, "rgba(255,255,255,.35)");
+    grad.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
   }
 
   function init() {
@@ -37,74 +50,103 @@
     const graph = new THREE.Group();
     scene.add(graph);
 
+    const glow = glowTexture();
+    const coreMat = new THREE.MeshBasicMaterial();
+    const ringMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.55, side: THREE.DoubleSide });
+    const tubeMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.28 });
+    const pulseColor = new THREE.Color();
+    const nodeColor = new THREE.Color();
+
     const xs = [-4.5, -1.5, 1.5, 4.5];
-    const layers = [
+    const layout = [
       [[0, 0]],
       [[2, -1], [-2, 1]],
       [[3, 1], [0.3, -1.5], [-2.8, 0.5]],
       [[3.8, -1], [1.6, 0.8], [-0.9, -1], [-3.3, 1.5]],
-    ].map((l, i) => l.map(([y, z]) => new THREE.Vector3(xs[i], y, z)));
+    ];
 
-    const nodeGeo = new THREE.BoxGeometry(0.9, 0.9, 0.3);
-    const edgeGeo = new THREE.EdgesGeometry(nodeGeo);
-    const fillMat = new THREE.MeshBasicMaterial();
-    const outlineMat = new THREE.LineBasicMaterial();
-    const lineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.7 });
-    const pulseMat = new THREE.MeshBasicMaterial();
-    const pulseGeo = new THREE.SphereGeometry(0.09, 12, 12);
-
-    layers.flat().forEach((p) => {
-      const box = new THREE.Mesh(nodeGeo, fillMat);
-      box.position.copy(p);
-      box.add(new THREE.LineSegments(edgeGeo, outlineMat));
-      graph.add(box);
-    });
+    type Node = { pos: THREE.Vector3; ring: THREE.Mesh; halo: THREE.Sprite; size: number; flash: number };
+    const coreGeo = new THREE.SphereGeometry(0.13, 24, 24);
+    const ringGeo = new THREE.RingGeometry(0.3, 0.335, 64);
+    const layers: Node[][] = layout.map((l, i) =>
+      l.map(([y, z]) => {
+        const pos = new THREE.Vector3(xs[i], y, z);
+        const size = i === 0 ? 1.5 : 1;
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        core.position.copy(pos);
+        core.scale.setScalar(size);
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.copy(pos);
+        ring.scale.setScalar(size);
+        const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, transparent: true, depthWrite: false, opacity: 0.25 }));
+        halo.position.copy(pos);
+        halo.scale.setScalar(1.4 * size);
+        graph.add(core, ring, halo);
+        return { pos, ring, halo, size, flash: 0 };
+      }),
+    );
 
     // Conexiones entre capas vecinas cuando están cerca en altura; curvas horizontales estilo n8n
-    const pulses: { curve: THREE.CubicBezierCurve3; mesh: THREE.Mesh; layer: number }[] = [];
+    const TRAIL = 7;
+    type Pulse = { curve: THREE.CubicBezierCurve3; sprites: THREE.Sprite[]; layer: number; target: Node };
+    const pulses: Pulse[] = [];
     layers.slice(0, -1).forEach((from, i) => {
       from.forEach((a) =>
         layers[i + 1].forEach((b) => {
-          if (Math.abs(a.y - b.y) > 3.6) return;
+          if (Math.abs(a.pos.y - b.pos.y) > 3.6) return;
           const curve = new THREE.CubicBezierCurve3(
-            a.clone().setX(a.x + 0.45),
-            a.clone().setX(a.x + 1.6),
-            b.clone().setX(b.x - 1.6),
-            b.clone().setX(b.x - 0.45),
+            a.pos.clone(),
+            a.pos.clone().setX(a.pos.x + 1.4),
+            b.pos.clone().setX(b.pos.x - 1.4),
+            b.pos.clone(),
           );
-          graph.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(40)), lineMat));
-          const mesh = new THREE.Mesh(pulseGeo, pulseMat);
-          mesh.visible = false;
-          graph.add(mesh);
-          pulses.push({ curve, mesh, layer: i });
+          graph.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.014, 6), tubeMat));
+          const sprites = Array.from({ length: TRAIL }, (_, k) => {
+            const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: pulseColor, transparent: true, depthWrite: false, opacity: 1 - k / TRAIL }));
+            s.scale.setScalar(0.55 * (1 - k / (TRAIL + 2)));
+            s.visible = false;
+            graph.add(s);
+            return s;
+          });
+          pulses.push({ curve, sprites, layer: i, target: b });
         }),
       );
     });
 
     const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     const applyColors = () => {
-      fillMat.color.set(css("--surface"));
-      outlineMat.color.set(css("--primary"));
-      lineMat.color.set(css("--text-2"));
-      pulseMat.color.set(css("--signal"));
+      nodeColor.set(css("--primary"));
+      pulseColor.set(css("--signal"));
+      coreMat.color.copy(nodeColor);
+      ringMat.color.copy(nodeColor);
+      tubeMat.color.set(css("--text-2"));
+      layers.flat().forEach((n) => n.halo.material.color.copy(nodeColor));
+      pulses.forEach((p) => p.sprites.forEach((s) => s.material.color.copy(pulseColor)));
       (scene.fog as THREE.Fog).color.set(css("--bg"));
-      if (reduce) render(0);
+      if (reduce) render(0, 0);
     };
 
-    const mouse = { x: 0, y: 0 };
-    addEventListener("pointermove", (e) => {
-      mouse.x = (e.clientX / innerWidth - 0.5) * 2;
-      mouse.y = (e.clientY / innerHeight - 0.5) * 2;
-    });
+    graph.rotation.x = 0.12;
+    const SPEED = 0.55;
 
-    function render(t: number) {
-      graph.rotation.y = Math.sin(t * 0.12) * 0.45 + mouse.x * 0.12;
-      graph.rotation.x = mouse.y * 0.08;
-      const cycle = (t * 0.6) % (layers.length + 1); // un tramo por capa y una pausa al final
+    function render(t: number, dt: number) {
+      graph.rotation.y = Math.sin(t * 0.12) * 0.35;
+      const cycle = (t * SPEED) % (layers.length + 0.6); // un tramo por capa y una pausa breve al final
       pulses.forEach((p) => {
         const k = cycle - p.layer;
-        p.mesh.visible = k >= 0 && k < 1;
-        if (p.mesh.visible) p.mesh.position.copy(p.curve.getPoint(k));
+        p.sprites.forEach((s, i) => {
+          const ki = k - i * 0.035;
+          s.visible = ki >= 0 && ki <= 1;
+          if (s.visible) s.position.copy(p.curve.getPoint(ki));
+        });
+        if (k >= 0.97 && k < 1.03) p.target.flash = 1; // la señal llegó al nodo
+      });
+      layers[0][0].flash = cycle < 0.1 ? 1 : layers[0][0].flash; // el disparador se enciende al iniciar el ciclo
+      layers.flat().forEach((n) => {
+        n.flash = Math.max(0, n.flash - dt * 1.6);
+        n.halo.material.opacity = 0.22 + n.flash * 0.6;
+        n.ring.scale.setScalar(n.size * (1 + n.flash * 0.45));
+        n.ring.lookAt(camera.position);
       });
       renderer.render(scene, camera);
     }
@@ -113,7 +155,8 @@
     const clock = new THREE.Clock();
     const loop = () => {
       if (!running) return;
-      render(clock.getElapsedTime());
+      const dt = clock.getDelta();
+      render(clock.elapsedTime, dt);
       requestAnimationFrame(loop);
     };
 
@@ -121,14 +164,21 @@
       const { clientWidth: w, clientHeight: h } = canvas;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
+      // encuadre: el grafo mide ≈12 de ancho y ≈8.5 de alto; la cámara se aleja lo justo para que quepa en ambos ejes
+      camera.position.z = Math.max(12.4, 12.5 / (0.728 * camera.aspect));
+      const fog = scene.fog as THREE.Fog;
+      fog.near = camera.position.z - 3;
+      fog.far = camera.position.z + 6;
       camera.updateProjectionMatrix();
-      graph.position.x = w > 900 ? 3.6 : 0;
-      if (reduce) render(0);
+      if (reduce) render(0, 0);
     }).observe(canvas);
 
     new IntersectionObserver(([entry]) => {
       running = entry.isIntersecting && !reduce;
-      if (running) loop();
+      if (running) {
+        clock.getDelta();
+        loop();
+      }
     }).observe(canvas);
 
     applyColors();

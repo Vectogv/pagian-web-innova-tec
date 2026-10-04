@@ -1,0 +1,36 @@
+---
+const commitments = [
+  ["Hablamos tu idioma", "Sin tecnicismos. Te explicamos qué vamos a hacer, por qué y cuánto te va a ahorrar."],
+  ["Precios para pymes", "Precio fijo y por escrito antes de empezar. Sin cobros sorpresa a mitad del proyecto."],
+  ["Primero lo que más duele", "Empezamos por la tarea que más tiempo le quita a tu equipo, para que veas resultados rápido."],
+  ["Todo queda a tu nombre", "Los flujos, el código y los accesos son tuyos. Si un día decides seguir solo, puedes hacerlo."],
+];
+---
+<section id="nosotros">
+  <div class="wrap about">
+    <span class="label">Quiénes somos</span>
+    <h2 class="about-statement">
+      Somos un grupo de emprendedores que conoce de cerca el día a día de una <em>pequeña y mediana empresa</em>:
+      equipos cortos, poco tiempo y muchas tareas que se repiten.
+    </h2>
+    <div class="about-body">
+      <figure class="photo about-photo" data-animate>
+        <img src="/fotos/equipo.jpg" alt="Equipo trabajando con portátiles alrededor de una mesa" width="1200" height="800" loading="lazy" decoding="async">
+      </figure>
+      <div class="about-text">
+      <p class="muted">
+        Creamos Innova Tec para que la automatización y el software a medida dejen de ser cosa de grandes empresas.
+        Trabajamos con dueños de negocio que quieren crecer sin contratar más personas para hacer trabajo repetitivo,
+        y les entregamos soluciones que su equipo entiende y usa desde el primer día.
+      </p>
+      <dl>
+        <div><dt class="label">Misión</dt><dd>Darle a cada pyme herramientas tecnológicas a su medida y a su alcance, para que su gente dedique el tiempo a lo que hace crecer el negocio.</dd></div>
+        <div><dt class="label">Visión</dt><dd>Ser el aliado tecnológico de confianza de las pequeñas y medianas empresas de Latinoamérica.</dd></div>
+      </dl>
+      </div>
+    </div>
+    <ul class="commitments" data-animate>
+      {commitments.map(([title, desc]) => <li><h3>{title}</h3><p>{desc}</p></li>)}
+    </ul>
+  </div>
+</section>

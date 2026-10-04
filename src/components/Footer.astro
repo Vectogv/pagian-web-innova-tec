@@ -1,11 +1,31 @@
 ---
-import { EMAIL, waUrl } from "../config.js";
+import { EMAIL, WHATSAPP, waUrl } from "../config.js";
 ---
 <footer>
-  <div class="wrap">
-    <span>© {new Date().getFullYear()} Innova Tec</span>
-    <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <b>Innova Tec</b>
+      <p>Automatización y software a medida para pequeñas y medianas empresas.</p>
+    </div>
+    <div>
+      <span class="label">Páginas</span>
+      <ul>
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/nosotros">Nosotros</a></li>
+        <li><a href="/planes">Planes</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <span class="label">Contacto</span>
+      <ul>
+        <li><a href={waUrl("Hola Innova Tec, quiero información sobre sus servicios.")} target="_blank" rel="noopener">WhatsApp +{WHATSAPP}</a></li>
+        <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+      </ul>
+    </div>
   </div>
+  <div class="wrap footer-legal">© {new Date().getFullYear()} Innova Tec</div>
 </footer>
 
 <a class="wa" href={waUrl("Hola Innova Tec, quiero información sobre sus servicios.")} target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">

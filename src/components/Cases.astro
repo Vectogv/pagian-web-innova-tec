@@ -1,22 +1,70 @@
 ---
 const cases = [
-  ["Restaurantes", "Los pedidos de WhatsApp llegan ordenados a cocina y caja, y el cliente recibe la confirmación al instante.", "WhatsApp · Google Sheets · Telegram"],
-  ["Clínicas y consultorios", "Agenda de citas, recordatorio un día antes y reprogramación sin llamadas.", "WhatsApp · Google Calendar · Gmail"],
-  ["Tiendas y e-commerce", "Inventario sincronizado, factura generada al vender y aviso cuando un producto se agota.", "Shopify · WooCommerce · Excel"],
-  ["Inmobiliarias", "Los interesados de portales y formularios se clasifican y se asignan al asesor correcto.", "Formularios web · HubSpot · WhatsApp"],
-  ["Servicios profesionales", "Propuestas, contratos y seguimiento de clientes sin perder un correo.", "Gmail · Google Drive · Notion"],
+  { id: "restaurantes", alt: "Salón de un restaurante con mesas listas para el servicio", name: "Restaurantes",
+    what: "Los pedidos de WhatsApp llegan ordenados a cocina y caja, y el cliente recibe la confirmación al instante.",
+    removes: "Anotar pedidos a mano y confirmar uno por uno.", tools: "WhatsApp · Google Sheets · Telegram" },
+  { id: "clinicas", alt: "Profesional de la salud trabajando en un portátil junto a un estetoscopio", name: "Clínicas y consultorios",
+    what: "La agenda se llena sola, cada paciente recibe un recordatorio el día anterior y puede reprogramar sin llamar.",
+    removes: "Llamadas de confirmación y citas olvidadas.", tools: "WhatsApp · Google Calendar · Gmail" },
+  { id: "tiendas", alt: "Interior de una tienda de ropa con estanterías y mostrador", name: "Tiendas y e-commerce",
+    what: "El inventario se sincroniza en cada venta, la factura se genera sola y te avisa cuando un producto se agota.",
+    removes: "Cuadrar inventario en Excel al final del día.", tools: "Shopify · WooCommerce · Excel" },
+  { id: "inmobiliarias", alt: "Llaves junto a una pequeña maqueta de casa", name: "Inmobiliarias",
+    what: "Los interesados de portales y formularios se clasifican y llegan al asesor correcto en minutos.",
+    removes: "Repartir contactos a mano y leads que nadie atiende.", tools: "Formularios web · HubSpot · WhatsApp" },
+  { id: "servicios", alt: "Oficina moderna con un pasillo de salas de reunión", name: "Servicios profesionales",
+    what: "Propuestas, contratos y seguimiento de cada cliente sin perder un correo.",
+    removes: "Buscar documentos y recordar a quién responder.", tools: "Gmail · Google Drive · Notion" },
 ];
 ---
 <section id="casos">
   <div class="wrap">
     <div class="section-head">
       <span class="label">Casos de uso</span>
-      <h2>Qué automatizamos según tu tipo de negocio</h2>
+      <h2>Elige tu tipo de negocio</h2>
     </div>
-    <ul class="cases">
-      {cases.map(([industry, what, tools]) => (
-        <li><h3>{industry}</h3><p>{what}</p><span class="label">{tools}</span></li>
+    <div class="cases">
+      <div class="case-tabs" role="tablist" aria-label="Tipo de negocio">
+        {cases.map((c, i) => (
+          <button id={`tab-${c.id}`} role="tab" aria-selected={i === 0 ? "true" : "false"} aria-controls={`panel-${c.id}`} tabindex={i === 0 ? 0 : -1}>{c.name}</button>
+        ))}
+      </div>
+      {cases.map((c, i) => (
+        <div class="case-panel" id={`panel-${c.id}`} role="tabpanel" aria-labelledby={`tab-${c.id}`} hidden={i !== 0}>
+          <figure class="photo case-photo">
+            <img src={`/fotos/${c.id}.jpg`} alt={c.alt} width="1200" height="800" loading={i === 0 ? "eager" : "lazy"} decoding="async">
+          </figure>
+          <p>{c.what}</p>
+          <dl>
+            <div><dt class="label">Se elimina</dt><dd>{c.removes}</dd></div>
+            <div><dt class="label">Herramientas</dt><dd>{c.tools}</dd></div>
+          </dl>
+          <a href="/contacto" class="btn btn-tertiary">Quiero esto para mi negocio</a>
+        </div>
       ))}
-    </ul>
+    </div>
   </div>
 </section>
+
+<script>
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>(".case-tabs [role=tab]")];
+  const select = (tab: HTMLButtonElement) => {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")!)!.hidden = !on;
+    });
+  };
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => select(tab));
+    tab.addEventListener("keydown", (e) => {
+      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      if (!step) return;
+      e.preventDefault();
+      const next = tabs[(i + step + tabs.length) % tabs.length];
+      select(next);
+      next.focus();
+    });
+  });
+</script>

@@ -1,54 +1,49 @@
 ---
-const manual = [
-  "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
-  "Copias nombre, teléfono y pedido a una hoja de Excel.",
-  "Reenvías el contacto a ventas por correo o por chat.",
-  "Los mensajes que llegan de noche esperan hasta el día siguiente.",
-];
+// Cada fila: la tarea manual de hoy frente a la tarea automática que la reemplaza
 const icons = {
   chat: '<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/>',
-  ai: '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/>',
   sheet: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h16M4 15h16M10 4v16"/>',
   mail: '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
 };
-const nodes = [
-  { icon: "chat", title: "Mensaje entrante", meta: "WhatsApp · disparador" },
-  { icon: "ai", title: "Clasificar intención", meta: "IA · cotización / soporte / otro" },
-  { icon: "sheet", title: "Registrar cliente", meta: "Google Sheets · nueva fila" },
-  { icon: "mail", title: "Avisar a ventas", meta: "Gmail · resumen del lead" },
+const rows = [
+  { manual: "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
+    icon: "chat", title: "Cada mensaje se detecta al instante", tool: "WhatsApp" },
+  { manual: "Copias nombre, teléfono y pedido a una hoja de Excel.",
+    icon: "sheet", title: "Los datos se guardan solos", tool: "Google Sheets" },
+  { manual: "Reenvías el contacto a ventas por correo o por chat.",
+    icon: "mail", title: "Ventas recibe un resumen del cliente", tool: "Gmail" },
+  { manual: "Los mensajes que llegan de noche esperan hasta el día siguiente.",
+    icon: "clock", title: "El cliente recibe respuesta a cualquier hora", tool: "Respuesta automática" },
 ];
 ---
-<section id="antes-despues">
+<section id="antes-despues" class="tint">
   <div class="wrap">
     <div class="section-head">
       <span class="label">Antes y después</span>
       <h2>El mismo proceso, sin trabajo manual</h2>
     </div>
-    <div class="compare">
-      <div class="manual">
-        <h3>Hoy, a mano</h3>
-        <ol>{manual.map((m) => <li>{m}</li>)}</ol>
-      </div>
 
-      <figure class="flow" aria-label="Flujo automatizado de atención de leads">
-        <div class="flow-head">
-          <span class="label">Con automatización</span>
-          <span class="label">Activo 24/7</span>
-        </div>
-        <ol class="nodes">
-          {nodes.map((n) => (
-            <li class="node">
-              <div class="node-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={icons[n.icon]} /></div>
-              <div><b>{n.title}</b><span>{n.meta}</span></div>
-              <div class="status">ok</div>
-            </li>
-          ))}
-        </ol>
-        <figcaption class="flow-foot">
-          <span class="label">Sin intervención manual</span>
-          <span class="label">Ejemplo</span>
-        </figcaption>
-      </figure>
+    <div class="swap" data-animate>
+      <div class="swap-head" aria-hidden="true">
+        <span class="label">Hoy, a mano</span>
+        <span></span>
+        <span class="label">Con automatización</span>
+      </div>
+      <ol>
+        {rows.map((r) => (
+          <li>
+            <p class="swap-before"><span class="sr-only">Hoy: </span>{r.manual}</p>
+            <span class="swap-arrow" aria-hidden="true">→</span>
+            <div class="swap-after">
+              <span class="swap-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={icons[r.icon]} /></span>
+              <div><b><span class="sr-only">Con automatización: </span>{r.title}</b><small>{r.tool}</small></div>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
+
+    <p class="compare-result"><b>Resultado:</b> ningún mensaje se queda sin respuesta y ventas recibe cada cliente en el momento en que escribe.</p>
   </div>
 </section>

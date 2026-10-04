@@ -1,37 +1,32 @@
 ---
-const groups = [
-  { title: "Automatizar", items: [
-    ["Flujos con n8n", "Conectamos CRM, correo, hojas de cálculo y facturación para que los datos se muevan solos."],
-    ["Asistentes con IA", "Chatbots para WhatsApp, web o Telegram que responden, agendan citas y califican prospectos."],
-    ["Lectura de documentos", "Extracción automática de datos de facturas, PDFs y formularios."],
-  ]},
-  { title: "Construir", items: [
-    ["Software a medida", "Paneles administrativos, inventarios y herramientas internas hechas para tu operación."],
-    ["Integraciones y APIs", "Webhooks, ERPs, pasarelas de pago y bases de datos conectadas entre sí."],
-    ["Páginas web", "Sitios rápidos y listos para captar clientes, conectados a tus automatizaciones."],
-  ]},
-  { title: "Acompañar", items: [
-    ["Reportes automáticos", "Dashboards y reportes que se generan y envían sin que nadie los arme."],
-    ["Consultoría", "Revisamos tus procesos y te decimos qué automatizar primero y por qué."],
-    ["Capacitación y soporte", "Tu equipo aprende a usar lo que construimos y nosotros lo mantenemos."],
-  ]},
-];
+import { serviceGroups } from "../data/services.js";
 ---
-<section id="servicios">
+<nav class="fronts-nav" aria-label="Frentes de servicio">
   <div class="wrap">
-    <div class="section-head">
-      <span class="label">Servicios</span>
-      <h2>Desde un flujo sencillo hasta una plataforma completa</h2>
-    </div>
-    <div class="groups">
-      {groups.map((g) => (
-        <div class="group">
-          <h3>{g.title}</h3>
-          <ul>
-            {g.items.map(([name, desc]) => <li><b>{name}</b><span>{desc}</span></li>)}
-          </ul>
+    <span class="label">Ir a</span>
+    {serviceGroups.map((g) => <a href={`#${g.id}`}>{g.title}<small>{g.items.length}</small></a>)}
+  </div>
+</nav>
+
+<section class="fronts">
+  <div class="wrap">
+    {serviceGroups.map((g, i) => (
+      <div class="front" id={g.id}>
+        <div class="front-head">
+          <span class="front-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+          <h2>{g.title}</h2>
+          <p>{g.lead}</p>
         </div>
-      ))}
-    </div>
+        <ul>
+          {g.items.map(([name, desc]) => (
+            <li>
+              <a href={`/contacto?servicio=${encodeURIComponent(name)}`}>
+                <b>{name}</b><span>{desc}</span><i aria-hidden="true">Cotizar →</i>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
   </div>
 </section>

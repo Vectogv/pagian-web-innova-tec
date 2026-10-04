@@ -1,9 +1,14 @@
 ---
-const tools = ["WhatsApp", "Gmail", "Google Sheets", "Google Calendar", "Excel", "HubSpot", "Shopify", "WooCommerce", "Notion", "Slack", "Telegram", "OpenAI", "PostgreSQL", "Stripe"];
+const tools = ["WhatsApp", "Gmail", "Google Sheets", "Google Calendar", "Excel", "HubSpot", "Shopify", "WooCommerce", "Notion", "Slack", "Telegram", "PostgreSQL", "Stripe"];
 ---
 <section class="tools" aria-label="Herramientas que conectamos">
   <div class="wrap">
-    <span class="label">Conectamos las herramientas que ya usas</span>
-    <ul>{tools.map((t) => <li>{t}</li>)}</ul>
+    <span class="label">Conectamos lo que ya usas</span>
+    <div class="marquee">
+      <div class="track">
+        <ul>{tools.map((t) => <li>{t}</li>)}</ul>
+        <ul class="dup" aria-hidden="true">{tools.map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </div>
   </div>
 </section>

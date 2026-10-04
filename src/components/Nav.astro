@@ -1,16 +1,24 @@
+---
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const links = [["/", "Inicio"], ["/servicios", "Servicios"], ["/nosotros", "Nosotros"], ["/planes", "Planes"]];
+---
 <nav>
   <div class="wrap">
-    <a href="#" class="logo" aria-label="Innova Tec, inicio">
+    <a href="/" class="logo" aria-label="Innova Tec, inicio">
       <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><rect x="2" y="9" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="16" y="15" width="6" height="6" rx="1"/><path d="M8 12h4m0 0V6h4m-4 6v6h4"/></svg>
       Innova Tec
     </a>
     <div class="links">
-      <a href="#casos">Casos</a>
-      <a href="#servicios">Servicios</a>
-      <a href="#proceso">Proceso</a>
-      <a href="#planes">Planes</a>
-      <a href="#faq">Preguntas</a>
+      {links.map(([href, label]) => <a href={href} aria-current={path === href ? "page" : undefined}>{label}</a>)}
     </div>
-    <a href="#contacto" class="btn btn-primary">Cotizar proyecto</a>
+    <a href="/contacto" class="btn btn-tertiary nav-cta">Cotizar proyecto</a>
+
+    <details class="menu">
+      <summary>Menú</summary>
+      <div class="menu-panel">
+        {links.map(([href, label]) => <a href={href} aria-current={path === href ? "page" : undefined}>{label}</a>)}
+        <a href="/contacto" aria-current={path === "/contacto" ? "page" : undefined}>Contacto</a>
+      </div>
+    </details>
   </div>
 </nav>

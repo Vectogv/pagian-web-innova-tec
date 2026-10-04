@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
 const { title, description } = Astro.props;
 ---
 <!doctype html>
@@ -12,8 +14,24 @@ const { title, description } = Astro.props;
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Las animaciones solo se activan con JS y si la persona no pidió reducir movimiento; sin esto la página se ve completa y quieta -->
+  <script is:inline>
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) document.documentElement.classList.add("motion");
+  </script>
 </head>
 <body>
-  <slot />
+  <Nav />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+  <script is:inline>
+    if (document.documentElement.classList.contains("motion")) {
+      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target); }
+      }), { threshold: 0.25 });
+      document.querySelectorAll("[data-animate]").forEach((el) => io.observe(el));
+    }
+  </script>
 </body>
 </html>

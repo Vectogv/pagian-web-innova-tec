@@ -1,13 +1,20 @@
 ---
-import { WHATSAPP } from "../config.js";
-const services = ["Flujos con n8n", "Asistente con IA", "Software a medida", "Integraciones y APIs", "Página web", "Aún no lo sé"];
+import { WHATSAPP, EMAIL, waUrl } from "../config.js";
+import { serviceNames } from "../data/services.js";
+const services = [...serviceNames, "Aún no lo sé"];
+const plans = ["Aún no lo sé", "Inicial", "Negocio", "A medida"];
 ---
-<section id="contacto">
+<section id="contacto" class="closing">
   <div class="wrap contact">
     <aside>
       <span class="label">Contacto</span>
       <h2>Cuéntanos qué quieres automatizar</h2>
       <p class="muted">Completa el formulario y se abrirá WhatsApp con tu mensaje listo para enviar. Respondemos en menos de 24 horas hábiles.</p>
+      <div class="direct">
+        <span class="label">También directo</span>
+        <a href={waUrl("Hola Innova Tec, quiero información sobre sus servicios.")} target="_blank" rel="noopener">WhatsApp +{WHATSAPP}</a>
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      </div>
     </aside>
     <form id="form" data-wa={WHATSAPP} novalidate>
       <div class="row">
@@ -21,11 +28,19 @@ const services = ["Flujos con n8n", "Asistente con IA", "Software a medida", "In
           <input id="empresa" autocomplete="organization" maxlength="80">
         </div>
       </div>
-      <div class="field">
-        <label for="servicio">Servicio de interés</label>
-        <select id="servicio">
-          {services.map((s) => <option>{s}</option>)}
-        </select>
+      <div class="row">
+        <div class="field">
+          <label for="servicio">Servicio de interés</label>
+          <select id="servicio">
+            {services.map((s) => <option>{s}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="plan">Plan</label>
+          <select id="plan">
+            {plans.map((p) => <option>{p}</option>)}
+          </select>
+        </div>
       </div>
       <div class="field">
         <label for="mensaje">¿Qué proceso te quita más tiempo?</label>
@@ -54,12 +69,20 @@ const services = ["Flujos con n8n", "Asistente con IA", "Software a medida", "In
   };
   ["nombre", "mensaje"].forEach((id) => $(id).addEventListener("input", () => check($(id))));
 
+  // Preseleccionar lo que la persona eligió en Servicios o Planes (?servicio=... / ?plan=...)
+  const params = new URLSearchParams(location.search);
+  for (const key of ["servicio", "plan"]) {
+    const value = params.get(key);
+    const select = $(key) as unknown as HTMLSelectElement;
+    if (value && [...select.options].some((o) => o.value === value)) select.value = value;
+  }
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const bad = [$("nombre"), $("mensaje")].filter((f) => !check(f));
     if (bad.length) return bad[0].focus();
     const v = (id: string) => $(id).value.trim();
-    const text = `Hola Innova Tec, soy ${v("nombre")}${v("empresa") ? " de " + v("empresa") : ""}.\nServicio: ${v("servicio")}\n${v("mensaje")}`;
+    const text = `Hola Innova Tec, soy ${v("nombre")}${v("empresa") ? " de " + v("empresa") : ""}.\nServicio: ${v("servicio")}${v("plan") !== "Aún no lo sé" ? "\nPlan: " + v("plan") : ""}\n${v("mensaje")}`;
     const btn = form.querySelector("button")!;
     btn.disabled = true;
     btn.textContent = "Abriendo WhatsApp…";

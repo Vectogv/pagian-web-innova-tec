@@ -6,14 +6,16 @@ const steps = [
   ["Entrega y soporte", "Capacitamos a tu equipo y acompañamos la puesta en marcha."],
 ];
 ---
-<section id="proceso">
+<section id="proceso" class="tint">
   <div class="wrap">
     <div class="section-head">
       <span class="label">Proceso</span>
       <h2>Sabes qué recibes y cuándo</h2>
     </div>
-    <ol class="steps">
-      {steps.map(([title, desc]) => <li><h3>{title}</h3><p>{desc}</p></li>)}
+    <ol class="steps" data-animate>
+      {steps.map(([title, desc], i) => (
+        <li><span class="label">Paso {i + 1}</span><h3>{title}</h3><p>{desc}</p></li>
+      ))}
     </ol>
   </div>
 </section>
