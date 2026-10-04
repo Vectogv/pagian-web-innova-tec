@@ -1,0 +1,16 @@
+---
+// Estado del servicio: compromisos reales de Innova Tec, presentados como lecturas de un panel
+const items = [
+  ["Respuesta", "< 24 h hábiles"],
+  ["Diagnóstico", "Gratis · 30 min"],
+  ["Primer flujo", "En días, no meses"],
+  ["Código y accesos", "100% tuyos"],
+];
+---
+<section class="status-strip" aria-label="Compromisos de servicio">
+  <div class="wrap">
+    <dl>
+      {items.map(([k, v]) => <div><dt class="label">{k}</dt><dd>{v}</dd></div>)}
+    </dl>
+  </div>
+</section>

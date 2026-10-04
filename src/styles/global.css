@@ -44,7 +44,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #000000; --surface: #000000; --surface-2: #000000; --text: #f2f2f2; --text-2: #a3a3a3;
+    --bg: #000000; --surface: #0b0c0c; --surface-2: #101211; --text: #f2f2f2; --text-2: #a3a3a3;
     --border: #262626; --primary: #5fbf98; --primary-hover: #7dd0ad; --on-primary: #0c1512;
     --signal: #e3a54a; --success: #4fb36f; --warning: #e0a34a; --error: #f07167; --info: #6ea8e8;
     --close-bg: #ffffff; --close-fg: #111111; --close-fg-2: #5c5c5c; --close-border: #e2e2e2;
@@ -52,7 +52,7 @@
   }
 }
 :root[data-theme="dark"] {
-  --bg: #000000; --surface: #000000; --surface-2: #000000; --text: #f2f2f2; --text-2: #a3a3a3;
+  --bg: #000000; --surface: #0b0c0c; --surface-2: #101211; --text: #f2f2f2; --text-2: #a3a3a3;
   --border: #262626; --primary: #5fbf98; --primary-hover: #7dd0ad; --on-primary: #0c1512;
   --signal: #e3a54a; --success: #4fb36f; --warning: #e0a34a; --error: #f07167; --info: #6ea8e8;
   --close-bg: #ffffff; --close-fg: #111111; --close-fg-2: #5c5c5c; --close-border: #e2e2e2;
@@ -130,23 +130,27 @@ nav .btn-tertiary { font-size: var(--fs-caption); }
 .node-tag a:hover { color: var(--text); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Salida: la pregunta final se responde ahí mismo y abre WhatsApp con la tarea escrita */
-.outro { padding-block: var(--s9) calc(var(--s9) + var(--s6)); }
+/* Etiqueta de ruta: "innova-tec / sección", el lenguaje de sistema de la sala de control */
+.path-tag { font-family: var(--mono); font-size: var(--fs-label); letter-spacing: .04em; color: var(--text-2); }
+.path-tag b { font-weight: 500; color: var(--primary); }
+
+/* Salida: una línea de comandos; la pregunta se responde ahí mismo y abre WhatsApp con la tarea escrita */
+.outro { padding-block: var(--s9) calc(var(--s9) + var(--s6)); border-top: 1px solid var(--border); }
 .outro .wrap { display: grid; gap: var(--s6); }
-.closing .node-tag { color: var(--close-fg); }
-.closing .node-tag::before { background: var(--primary); border-color: var(--primary); }
 .outro-q { font-size: var(--fs-hero); line-height: .98; letter-spacing: -0.04em; font-weight: 700; max-width: 13ch; }
 .outro-q label { cursor: text; }
-.outro-form { display: grid; grid-template-columns: 1fr auto; gap: var(--s3) var(--s4); align-items: end; max-width: 820px; padding: 0; background: none; color: inherit; border-radius: 0; }
-.outro-form input { min-height: 56px; padding-inline: 0; font-size: 1.125rem; background: transparent; color: var(--close-fg); border: 0; border-bottom: 2px solid var(--close-fg); border-radius: 0; }
-.outro-form input::placeholder { color: var(--close-fg-2); }
-.outro-form input:hover { border-color: var(--close-fg); }
-.outro-form input:focus { outline: none; border-bottom-color: var(--primary); }
-.outro-form .btn { min-height: 52px; }
+.outro-form { display: grid; grid-template-columns: 1fr auto; gap: var(--s3) var(--s4); align-items: center; max-width: 860px; padding: var(--s3) var(--s3) var(--s3) var(--s4); background: var(--surface); color: inherit; border: 1px solid var(--border); border-radius: 0; }
+.outro-form:focus-within { border-color: var(--primary); }
+.prompt { display: flex; align-items: center; gap: var(--s3); font-family: var(--mono); }
+.prompt span { color: var(--primary); font-weight: 600; }
+.outro-form input { min-height: 48px; padding: 0; font-family: var(--mono); font-size: 1rem; background: transparent; color: var(--text); border: 0; border-radius: 0; }
+.outro-form input::placeholder { color: var(--text-2); }
+.outro-form input:focus { outline: none; }
 .outro-form .error { grid-column: 1 / -1; color: var(--signal); }
-.outro-alt { font-size: var(--fs-small); color: var(--close-fg-2); }
-.outro-alt a { color: var(--close-fg); text-underline-offset: 4px; }
+.outro-alt { font-size: var(--fs-small); color: var(--text-2); }
+.outro-alt a { color: var(--text); text-underline-offset: 4px; }
 @media (max-width: 600px) { .outro-form { grid-template-columns: 1fr; } .outro-form .btn { width: 100%; } }
+
 
 /* Fotos: blanco y negro; toman color al entrar en pantalla o al pasar el mouse */
 .photo { position: relative; overflow: hidden; background: var(--border); }

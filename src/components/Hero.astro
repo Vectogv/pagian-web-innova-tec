@@ -1,30 +1,49 @@
-<!-- Disparador: titular escalonado que deja espacio al grafo, y una barra de estado que responde qué, para quién y cómo empezar -->
+<!-- Sala de control: el titular y, debajo, una consola con el flujo en vivo (grafo 3D) y su registro de ejecución -->
 <header class="hero">
   <div class="wrap">
-    <span class="node-tag">01 · Disparador</span>
-    <div class="hero-stage">
-      <div class="hero-words">
-        <h1 class="hero-title">
-          <span>Lo repetitivo</span>
-          <span>de tu negocio,</span>
-          <span class="indent">que lo haga</span>
-          <span class="indent accent">un flujo.</span>
-        </h1>
-        <p class="hero-lede">Conectamos tus herramientas con n8n, creamos chatbots y desarrollamos el software que tu operación necesita.</p>
-      </div>
-      <div class="hero-graph">
-        <canvas id="graph" aria-hidden="true"></canvas>
-        <div class="graph-labels" aria-hidden="true"></div>
-        <span class="graph-note label">Un flujo trabajando, en vivo</span>
+    <div class="hero-top">
+      <h1 class="hero-title">
+        <span>Automatizamos tu operación.</span>
+        <span class="accent">Construimos tu software.</span>
+      </h1>
+      <div class="hero-side">
+        <p>Para pequeñas y medianas empresas que quieren dejar el trabajo repetitivo y crecer con tecnología propia: flujos con n8n, integraciones y software a medida.</p>
+        <div class="actions">
+          <a href="/contacto" class="btn btn-primary">Agendar diagnóstico gratuito</a>
+          <a href="#stack" class="btn btn-tertiary">Ver cómo lo construimos</a>
+        </div>
       </div>
     </div>
-    <div class="statusbar">
-      <p><span class="label">Qué hacemos</span>Automatización y software a medida</p>
-      <p><span class="label">Para quién</span>Pequeñas y medianas empresas</p>
-      <a class="status-cta" href="/contacto">
-        <span class="label">Empieza aquí</span>
-        <b>Diagnóstico gratuito de 30 min <i aria-hidden="true">→</i></b>
-      </a>
+
+    <div class="console" role="img" aria-label="Simulación de un flujo de automatización ejecutándose: un mensaje entra, se clasifica, se guarda, se factura y se avisa a ventas">
+      <div class="console-bar">
+        <div class="console-tabs">
+          <span class="on">flujo-ventas</span>
+          <span>facturación</span>
+          <span>agenda</span>
+        </div>
+        <span class="console-state">Activo · simulación</span>
+      </div>
+      <div class="console-body">
+        <div class="hero-graph">
+          <canvas id="graph" aria-hidden="true"></canvas>
+          <div class="graph-labels" aria-hidden="true"></div>
+        </div>
+        <div class="console-log">
+          <span class="label">Registro de ejecución</span>
+          <ol id="exec-log" aria-hidden="true">
+            <li><time>09:14:02</time><span>Nuevo mensaje</span><b>ok</b></li>
+            <li><time>09:14:02</time><span>Clasificar</span><b>ok</b></li>
+            <li><time>09:14:03</time><span>Guardar en Sheets</span><b>ok</b></li>
+            <li><time>09:14:03</time><span>Crear factura</span><b>ok</b></li>
+            <li><time>09:14:04</time><span>Avisar a ventas</span><b>ok</b></li>
+          </ol>
+        </div>
+      </div>
+      <div class="console-foot">
+        <span>n8n · 10 nodos · 4 capas</span>
+        <span>Sin intervención manual</span>
+      </div>
     </div>
   </div>
 </header>
@@ -81,6 +100,18 @@
       ["Reporte del día", "*Avisar a ventas", "Enviar recordatorio", "Actualizar inventario"],
     ];
     const labelBox = canvas.parentElement!.querySelector(".graph-labels") as HTMLElement;
+
+    // Registro de ejecución: cada tarea que se enciende en el grafo se escribe con la hora real (máx. 7 líneas)
+    const logList = document.getElementById("exec-log");
+    const log = (task: string) => {
+      if (!logList || reduce) return;
+      const li = document.createElement("li");
+      const time = new Date().toLocaleTimeString("es", { hour12: false });
+      li.innerHTML = `<time>${time}</time><span></span><b>ok</b>`;
+      li.querySelector("span")!.textContent = task;
+      logList.append(li);
+      while (logList.children.length > 7) logList.firstElementChild!.remove();
+    };
 
     const xs = [-4.5, -1.5, 1.5, 4.5];
     const layout = [
@@ -152,7 +183,7 @@
       tubeMat.color.set(css("--text-2"));
       layers.flat().forEach((n) => n.halo.material.color.copy(nodeColor));
       pulses.forEach((p) => p.sprites.forEach((s) => s.material.color.copy(pulseColor)));
-      (scene.fog as THREE.Fog).color.set(css("--bg"));
+      (scene.fog as THREE.Fog).color.set(css("--surface")); // el grafo vive dentro del panel de la consola
       if (reduce) render(0, 0);
     };
 
@@ -186,7 +217,9 @@
         const half = n.label.offsetWidth / 2;
         const x = Math.min(Math.max(((v.x + 1) / 2) * w, half + 4), w - half - 4); // que no se corte en los bordes
         n.label.style.transform = `translate(${x}px, ${((1 - v.y) / 2) * h}px) translate(-50%, 18px)`;
-        n.label.classList.toggle("on", n.flash > 0.35);
+        const on = n.flash > 0.35;
+        if (on && !n.label.classList.contains("on")) log(n.label.textContent!); // la señal llegó: se registra la ejecución
+        n.label.classList.toggle("on", on);
       });
     }
 
@@ -209,7 +242,7 @@
       fog.near = camera.position.z - 3;
       fog.far = camera.position.z + 6;
       camera.updateProjectionMatrix();
-      if (reduce) render(0, 0);
+      if (!running) render(clock.elapsedTime, 0); // primer cuadro (y cada cambio de tamaño) aunque la animación no esté corriendo
     }).observe(canvas);
 
     new IntersectionObserver(([entry]) => {

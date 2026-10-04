@@ -1,8 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
+import StatusStrip from "../components/StatusStrip.astro";
 import Tools from "../components/Tools.astro";
 import BeforeAfter from "../components/BeforeAfter.astro";
+import Stack from "../components/Stack.astro";
 import Cases from "../components/Cases.astro";
 import CtaBand from "../components/CtaBand.astro";
 import "../styles/home.css";
@@ -11,12 +13,12 @@ import "../styles/home.css";
   title="Innova Tec | Automatización y Software a Medida"
   description="Innova Tec: automatizaciones con n8n, chatbots, integraciones y desarrollo de software a medida para pequeñas y medianas empresas."
 >
-  <!-- El Inicio se lee como un flujo: "el cable" recorre la página y cada sección es un nodo -->
-  <div class="flow-page">
-    <Hero />
-    <Tools />
-    <BeforeAfter />
-    <Cases />
-    <CtaBand tag="05 · Salida" />
-  </div>
+  <!-- Sala de control: consola en vivo → estado → conexiones → diff antes/después → stack → casos → línea de comandos -->
+  <Hero />
+  <StatusStrip />
+  <Tools />
+  <BeforeAfter />
+  <Stack />
+  <Cases />
+  <CtaBand />
 </Base>

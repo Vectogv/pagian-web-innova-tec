@@ -1,14 +1,16 @@
 ---
-// Salida: la pregunta se responde aquí mismo; se abre WhatsApp con la tarea escrita
+// Salida: una línea de comandos. La persona escribe la tarea y se abre WhatsApp con el texto listo
 import { WHATSAPP } from "../config.js";
-const { tag = "Salida" } = Astro.props;
 ---
-<section class="closing outro">
+<section class="outro">
   <div class="wrap">
-    <span class="node-tag">{tag}</span>
+    <span class="path-tag">innova-tec / <b>empezar</b></span>
     <h2 class="outro-q"><label for="tarea">¿Qué tarea te gustaría dejar de hacer a mano?</label></h2>
     <form class="outro-form" id="outro-form" data-wa={WHATSAPP} novalidate>
-      <input id="tarea" name="tarea" maxlength="300" autocomplete="off" placeholder="Ej.: copiar los pedidos de WhatsApp a Excel" required>
+      <div class="prompt">
+        <span aria-hidden="true">$</span>
+        <input id="tarea" name="tarea" maxlength="300" autocomplete="off" placeholder="copiar los pedidos de WhatsApp a Excel" required>
+      </div>
       <button class="btn btn-primary" type="submit">Enviar por WhatsApp</button>
       <span class="error" hidden>Escribe la tarea en una frase y te respondemos con una idea para automatizarla.</span>
     </form>

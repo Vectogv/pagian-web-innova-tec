@@ -1,56 +1,46 @@
 ---
-// Tres actos: el problema (un día cualquiera, horas de ejemplo) → la transformación (el nodo que reemplaza cada tarea) → el resultado
-const icons = {
-  chat: '<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/>',
-  sheet: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h16M4 15h16M10 4v16"/>',
-  mail: '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/>',
-  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
-};
+// Antes/después como un diff de código: en rojo (-) el trabajo manual de un día cualquiera, en verde (+) lo que hace el flujo
 const rows = [
   { time: "08:00", manual: "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
-    icon: "chat", title: "Cada mensaje se detecta al instante", tool: "WhatsApp" },
+    auto: "Cada mensaje se detecta al instante", tool: "WhatsApp" },
   { time: "10:30", manual: "Copias nombre, teléfono y pedido a una hoja de Excel.",
-    icon: "sheet", title: "Los datos se guardan solos", tool: "Google Sheets" },
+    auto: "Los datos se guardan solos", tool: "Google Sheets" },
   { time: "15:00", manual: "Reenvías el contacto a ventas por correo o por chat.",
-    icon: "mail", title: "Ventas recibe un resumen del cliente", tool: "Gmail" },
+    auto: "Ventas recibe un resumen del cliente", tool: "Gmail" },
   { time: "22:00", manual: "Los mensajes que llegan de noche esperan hasta el día siguiente.",
-    icon: "clock", title: "El cliente recibe respuesta a cualquier hora", tool: "Respuesta automática" },
+    auto: "El cliente recibe respuesta a cualquier hora", tool: "Respuesta automática" },
 ];
 ---
 <section class="transform" aria-labelledby="transform-title">
   <div class="wrap">
     <div class="sec-head">
-      <span class="node-tag">03 · Transformación</span>
+      <span class="path-tag">innova-tec / <b>antes-y-despues</b></span>
       <h2 id="transform-title">Así cambia un día de trabajo</h2>
+      <p class="muted">Lo que hoy haces a mano, comparado línea por línea con lo que hace el flujo. Horas de ejemplo.</p>
     </div>
 
-    <div class="acts" data-animate>
-      <div class="acts-head" aria-hidden="true">
-        <span class="label act-problem">Problema · un día cualquiera</span>
-        <span></span>
-        <span class="label act-flow">Transformación · el flujo</span>
+    <div class="diff" data-animate>
+      <div class="diff-bar">
+        <span>un-dia-de-trabajo.diff</span>
+        <span><em class="del">−4 tareas manuales</em> <em class="add">+4 automáticas</em></span>
       </div>
-      <ol class="acts-rows">
-        {rows.map((r) => (
+      <ol class="diff-rows">
+        {rows.map((r, i) => (
           <li>
-            <div class="act-before">
-              <time class="label">{r.time}</time>
-              <p><span class="sr-only">Hoy: </span>{r.manual}</p>
+            <div class="diff-del">
+              <span class="ln" aria-hidden="true">{i + 1}</span>
+              <span class="sign" aria-hidden="true">−</span>
+              <p><span class="sr-only">Hoy, a mano: </span><time>{r.time}</time> {r.manual}</p>
             </div>
-            <span class="act-wire" aria-hidden="true"></span>
-            <div class="act-after">
-              <span class="act-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={icons[r.icon]} /></span>
-              <div><b><span class="sr-only">Con automatización: </span>{r.title}</b><small>{r.tool}</small></div>
+            <div class="diff-add">
+              <span class="ln" aria-hidden="true">{i + 1}</span>
+              <span class="sign" aria-hidden="true">+</span>
+              <p><span class="sr-only">Con automatización: </span><b>{r.auto}</b> <small>{r.tool}</small></p>
             </div>
           </li>
         ))}
       </ol>
-      <div class="act-result">
-        <span class="label">Resultado</span>
-        <p class="act-result-big">Cada cliente atendido, a cualquier hora.</p>
-        <p>Ningún mensaje se queda sin respuesta y ventas recibe cada cliente en el momento en que escribe.</p>
-      </div>
+      <p class="diff-result"><span aria-hidden="true">@@</span> Resultado: cada cliente atendido, a cualquier hora. Ventas recibe cada contacto en el momento en que escribe. <span aria-hidden="true">@@</span></p>
     </div>
-    <p class="acts-note label">Horas de ejemplo</p>
   </div>
 </section>
