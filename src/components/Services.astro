@@ -11,7 +11,7 @@ import { serviceGroups } from "../data/services.js";
 <section class="fronts">
   <div class="wrap">
     {serviceGroups.map((g, i) => (
-      <div class="front" id={g.id}>
+      <div class:list={["front", ["", "front-mirror", "front-wide"][i]]} id={g.id}>
         <div class="front-head">
           <span class="front-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
           <h2>{g.title}</h2>

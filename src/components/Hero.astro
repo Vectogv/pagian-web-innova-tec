@@ -2,14 +2,18 @@
   <div class="wrap hero-top">
     <div class="hero-copy">
       <span class="label">Automatización · Integraciones · Software a medida</span>
-      <h1>Las tareas repetitivas de tu negocio, resueltas por flujos que trabajan solos.</h1>
+      <h1>Las tareas repetitivas de tu negocio, resueltas por flujos que trabajan <em>solos</em>.</h1>
       <p>Conectamos tus herramientas con n8n, creamos chatbots y desarrollamos el software que tu operación necesita.</p>
       <div class="actions">
         <a href="/contacto" class="btn btn-primary">Agendar diagnóstico gratuito</a>
         <a href="#casos" class="btn btn-tertiary">Ver casos de uso</a>
       </div>
     </div>
-    <div class="hero-graph"><canvas id="graph" aria-hidden="true"></canvas></div>
+    <div class="hero-graph">
+      <canvas id="graph" aria-hidden="true"></canvas>
+      <div class="graph-labels" aria-hidden="true"></div>
+      <span class="graph-note label">Así se ve un flujo trabajando</span>
+    </div>
   </div>
 </header>
 
@@ -57,6 +61,15 @@
     const pulseColor = new THREE.Color();
     const nodeColor = new THREE.Color();
 
+    // Nombre de la tarea de cada nodo, en el mismo orden que `layout`; las marcadas con * se muestran también en celular
+    const names = [
+      ["*Nuevo mensaje"],
+      ["Clasificar", "Responder al cliente"],
+      ["Guardar en Sheets", "*Crear factura", "Agendar cita"],
+      ["Reporte del día", "*Avisar a ventas", "Enviar recordatorio", "Actualizar inventario"],
+    ];
+    const labelBox = canvas.parentElement!.querySelector(".graph-labels") as HTMLElement;
+
     const xs = [-4.5, -1.5, 1.5, 4.5];
     const layout = [
       [[0, 0]],
@@ -65,11 +78,11 @@
       [[3.8, -1], [1.6, 0.8], [-0.9, -1], [-3.3, 1.5]],
     ];
 
-    type Node = { pos: THREE.Vector3; ring: THREE.Mesh; halo: THREE.Sprite; size: number; flash: number };
+    type Node = { pos: THREE.Vector3; ring: THREE.Mesh; halo: THREE.Sprite; size: number; flash: number; label: HTMLSpanElement };
     const coreGeo = new THREE.SphereGeometry(0.13, 24, 24);
     const ringGeo = new THREE.RingGeometry(0.3, 0.335, 64);
     const layers: Node[][] = layout.map((l, i) =>
-      l.map(([y, z]) => {
+      l.map(([y, z], j) => {
         const pos = new THREE.Vector3(xs[i], y, z);
         const size = i === 0 ? 1.5 : 1;
         const core = new THREE.Mesh(coreGeo, coreMat);
@@ -82,7 +95,12 @@
         halo.position.copy(pos);
         halo.scale.setScalar(1.4 * size);
         graph.add(core, ring, halo);
-        return { pos, ring, halo, size, flash: 0 };
+        const label = document.createElement("span");
+        const name = names[i][j];
+        label.textContent = name.replace("*", "");
+        if (name.startsWith("*")) label.className = "key";
+        labelBox.append(label);
+        return { pos, ring, halo, size, flash: 0, label };
       }),
     );
 
@@ -149,6 +167,15 @@
         n.ring.lookAt(camera.position);
       });
       renderer.render(scene, camera);
+      // etiquetas HTML: proyectar cada nodo a la pantalla y encender la tarea cuando la señal llega
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      layers.flat().forEach((n) => {
+        const v = n.pos.clone().applyMatrix4(graph.matrixWorld).project(camera);
+        const half = n.label.offsetWidth / 2;
+        const x = Math.min(Math.max(((v.x + 1) / 2) * w, half + 4), w - half - 4); // que no se corte en los bordes
+        n.label.style.transform = `translate(${x}px, ${((1 - v.y) / 2) * h}px) translate(-50%, 18px)`;
+        n.label.classList.toggle("on", n.flash > 0.35);
+      });
     }
 
     let running = false;

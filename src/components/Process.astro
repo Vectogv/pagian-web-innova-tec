@@ -1,9 +1,10 @@
 ---
+// El ancho de cada paso en la línea refleja cuánto dura, como un cronograma
 const steps = [
-  ["Diagnóstico", "Una reunión gratuita para entender tus procesos y encontrar dónde se pierde tiempo."],
-  ["Propuesta", "Alcance, precio y fecha de entrega por escrito antes de empezar."],
-  ["Desarrollo", "Construimos y probamos contigo, con avances que puedes revisar cada semana."],
-  ["Entrega y soporte", "Capacitamos a tu equipo y acompañamos la puesta en marcha."],
+  { title: "Diagnóstico", when: "30 min · gratis", width: 1.35, desc: "Una reunión para entender tus procesos y encontrar dónde se pierde tiempo." },
+  { title: "Propuesta", when: "48 horas", width: 1, desc: "Alcance, precio y fecha de entrega por escrito antes de empezar." },
+  { title: "Desarrollo", when: "Días o semanas, según alcance", width: 2.4, desc: "Construimos y probamos contigo, con avances que puedes revisar cada semana." },
+  { title: "Entrega y soporte", when: "15–30 días incluidos", width: 1.5, desc: "Capacitamos a tu equipo y acompañamos la puesta en marcha." },
 ];
 ---
 <section id="proceso" class="tint">
@@ -12,9 +13,13 @@ const steps = [
       <span class="label">Proceso</span>
       <h2>Sabes qué recibes y cuándo</h2>
     </div>
-    <ol class="steps" data-animate>
-      {steps.map(([title, desc], i) => (
-        <li><span class="label">Paso {i + 1}</span><h3>{title}</h3><p>{desc}</p></li>
+    <ol class="steps" data-animate style={`--cols: ${steps.map((s) => `${s.width}fr`).join(" ")}`}>
+      {steps.map((s, i) => (
+        <li class:list={{ free: i === 0 }}>
+          <span class="label">Paso {i + 1} · {s.when}</span>
+          <h3>{s.title}</h3>
+          <p>{s.desc}</p>
+        </li>
       ))}
     </ol>
   </div>

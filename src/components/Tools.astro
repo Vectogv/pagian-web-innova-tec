@@ -3,12 +3,10 @@ const tools = ["WhatsApp", "Gmail", "Google Sheets", "Google Calendar", "Excel",
 ---
 <section class="tools" aria-label="Herramientas que conectamos">
   <div class="wrap">
-    <span class="label">Conectamos lo que ya usas</span>
-    <div class="marquee">
-      <div class="track">
-        <ul>{tools.map((t) => <li>{t}</li>)}</ul>
-        <ul class="dup" aria-hidden="true">{tools.map((t) => <li>{t}</li>)}</ul>
-      </div>
-    </div>
+    <p>
+      Trabajamos con lo que ya usas:{" "}
+      {tools.map((t, i) => <><b>{t}</b>{i < tools.length - 1 ? ", " : " "}</>)}
+      y cualquier otra app que tenga API.
+    </p>
   </div>
 </section>
