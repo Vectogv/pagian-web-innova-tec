@@ -1,0 +1,13 @@
+---
+import { EMAIL, waUrl } from "../config.js";
+---
+<footer>
+  <div class="wrap">
+    <span>© {new Date().getFullYear()} Innova Tec</span>
+    <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+  </div>
+</footer>
+
+<a class="wa" href={waUrl("Hola Innova Tec, quiero información sobre sus servicios.")} target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg>
+</a>

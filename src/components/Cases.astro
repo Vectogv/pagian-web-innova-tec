@@ -1,0 +1,22 @@
+---
+const cases = [
+  ["Restaurantes", "Los pedidos de WhatsApp llegan ordenados a cocina y caja, y el cliente recibe la confirmación al instante.", "WhatsApp · Google Sheets · Telegram"],
+  ["Clínicas y consultorios", "Agenda de citas, recordatorio un día antes y reprogramación sin llamadas.", "WhatsApp · Google Calendar · Gmail"],
+  ["Tiendas y e-commerce", "Inventario sincronizado, factura generada al vender y aviso cuando un producto se agota.", "Shopify · WooCommerce · Excel"],
+  ["Inmobiliarias", "Los interesados de portales y formularios se clasifican y se asignan al asesor correcto.", "Formularios web · HubSpot · WhatsApp"],
+  ["Servicios profesionales", "Propuestas, contratos y seguimiento de clientes sin perder un correo.", "Gmail · Google Drive · Notion"],
+];
+---
+<section id="casos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label">Casos de uso</span>
+      <h2>Qué automatizamos según tu tipo de negocio</h2>
+    </div>
+    <ul class="cases">
+      {cases.map(([industry, what, tools]) => (
+        <li><h3>{industry}</h3><p>{what}</p><span class="label">{tools}</span></li>
+      ))}
+    </ul>
+  </div>
+</section>

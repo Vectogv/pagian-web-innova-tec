@@ -1,0 +1,19 @@
+---
+const steps = [
+  ["Diagnóstico", "Una reunión gratuita para entender tus procesos y encontrar dónde se pierde tiempo."],
+  ["Propuesta", "Alcance, precio y fecha de entrega por escrito antes de empezar."],
+  ["Desarrollo", "Construimos y probamos contigo, con avances que puedes revisar cada semana."],
+  ["Entrega y soporte", "Capacitamos a tu equipo y acompañamos la puesta en marcha."],
+];
+---
+<section id="proceso">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label">Proceso</span>
+      <h2>Sabes qué recibes y cuándo</h2>
+    </div>
+    <ol class="steps">
+      {steps.map(([title, desc]) => <li><h3>{title}</h3><p>{desc}</p></li>)}
+    </ol>
+  </div>
+</section>

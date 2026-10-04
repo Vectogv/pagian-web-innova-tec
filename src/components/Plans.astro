@@ -1,0 +1,30 @@
+---
+// Reemplaza "$XXX" por tus precios
+const plans = [
+  { name: "Inicial", price: "Desde $XXX", per: "por proyecto", cta: "Empezar con Inicial",
+    features: ["1 flujo de automatización", "Hasta 3 integraciones", "Documentación del flujo", "15 días de soporte"] },
+  { name: "Negocio", price: "Desde $XXX", per: "por proyecto", cta: "Elegir Negocio", featured: true,
+    features: ["Hasta 5 flujos con n8n", "Asistente con IA", "Dashboard de reportes", "Capacitación del equipo", "30 días de soporte"] },
+  { name: "A medida", price: "Cotización", cta: "Solicitar cotización",
+    features: ["Software personalizado", "Integraciones complejas", "Agentes de IA avanzados", "Mantenimiento mensual"] },
+];
+---
+<section id="planes">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label">Planes</span>
+      <h2>Elige un punto de partida</h2>
+    </div>
+    <div class="plans">
+      {plans.map((p) => (
+        <div class:list={["plan", { featured: p.featured }]}>
+          <div class="plan-top"><h3>{p.name}</h3>{p.featured && <span class="badge">Recomendado</span>}</div>
+          <div class="price">{p.price} {p.per && <small>{p.per}</small>}</div>
+          <ul>{p.features.map((f) => <li>{f}</li>)}</ul>
+          <a href="#contacto" class:list={["btn", p.featured ? "btn-primary" : "btn-secondary"]}>{p.cta}</a>
+        </div>
+      ))}
+    </div>
+    <p class="note">El precio final depende del alcance. Lo acordamos por escrito en la propuesta.</p>
+  </div>
+</section>

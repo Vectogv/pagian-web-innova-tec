@@ -1,0 +1,69 @@
+---
+import { WHATSAPP } from "../config.js";
+const services = ["Flujos con n8n", "Asistente con IA", "Software a medida", "Integraciones y APIs", "Página web", "Aún no lo sé"];
+---
+<section id="contacto">
+  <div class="wrap contact">
+    <aside>
+      <span class="label">Contacto</span>
+      <h2>Cuéntanos qué quieres automatizar</h2>
+      <p class="muted">Completa el formulario y se abrirá WhatsApp con tu mensaje listo para enviar. Respondemos en menos de 24 horas hábiles.</p>
+    </aside>
+    <form id="form" data-wa={WHATSAPP} novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" autocomplete="name" maxlength="80" required>
+          <span class="error" hidden>Escribe tu nombre para saber cómo dirigirnos a ti.</span>
+        </div>
+        <div class="field">
+          <label for="empresa">Empresa <small>(opcional)</small></label>
+          <input id="empresa" autocomplete="organization" maxlength="80">
+        </div>
+      </div>
+      <div class="field">
+        <label for="servicio">Servicio de interés</label>
+        <select id="servicio">
+          {services.map((s) => <option>{s}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="mensaje">¿Qué proceso te quita más tiempo?</label>
+        <textarea id="mensaje" rows="4" maxlength="1000" required></textarea>
+        <span class="error" hidden>Describe brevemente el proceso, por ejemplo: "copiamos pedidos de WhatsApp a Excel a mano".</span>
+      </div>
+      <div class="form-foot">
+        <p>Se abrirá WhatsApp en una pestaña nueva.</p>
+        <button class="btn btn-primary" type="submit">Continuar en WhatsApp</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const form = document.getElementById("form") as HTMLFormElement;
+
+  const check = (el: HTMLInputElement) => {
+    const ok = el.value.trim() !== "";
+    const field = el.closest(".field")!;
+    field.classList.toggle("invalid", !ok);
+    (field.querySelector(".error") as HTMLElement).hidden = ok;
+    el.setAttribute("aria-invalid", String(!ok));
+    return ok;
+  };
+  ["nombre", "mensaje"].forEach((id) => $(id).addEventListener("input", () => check($(id))));
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const bad = [$("nombre"), $("mensaje")].filter((f) => !check(f));
+    if (bad.length) return bad[0].focus();
+    const v = (id: string) => $(id).value.trim();
+    const text = `Hola Innova Tec, soy ${v("nombre")}${v("empresa") ? " de " + v("empresa") : ""}.\nServicio: ${v("servicio")}\n${v("mensaje")}`;
+    const btn = form.querySelector("button")!;
+    btn.disabled = true;
+    btn.textContent = "Abriendo WhatsApp…";
+    window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`, "_blank");
+    setTimeout(() => { btn.disabled = false; btn.textContent = "Continuar en WhatsApp"; }, 1500);
+  });
+</script>
