@@ -1,46 +1,42 @@
 ---
-// Antes/después como un diff de código: en rojo (-) el trabajo manual de un día cualquiera, en verde (+) lo que hace el flujo
+// Antes / ahora: cada tarea que hoy se hace a mano, frente a lo que pasa cuando el flujo la hace sola
 const rows = [
-  { time: "08:00", manual: "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
-    auto: "Cada mensaje se detecta al instante", tool: "WhatsApp" },
-  { time: "10:30", manual: "Copias nombre, teléfono y pedido a una hoja de Excel.",
-    auto: "Los datos se guardan solos", tool: "Google Sheets" },
-  { time: "15:00", manual: "Reenvías el contacto a ventas por correo o por chat.",
-    auto: "Ventas recibe un resumen del cliente", tool: "Gmail" },
-  { time: "22:00", manual: "Los mensajes que llegan de noche esperan hasta el día siguiente.",
+  { manual: "Revisas WhatsApp varias veces al día para ver si escribió un cliente.",
+    auto: "Cada mensaje se atiende al instante", tool: "WhatsApp" },
+  { manual: "Copias nombre, teléfono y pedido a una hoja de Excel.",
+    auto: "Los datos del cliente se guardan solos", tool: "Google Sheets" },
+  { manual: "Reenvías el contacto a ventas por correo o por chat.",
+    auto: "Ventas recibe un resumen listo para llamar", tool: "Gmail" },
+  { manual: "Los mensajes que llegan de noche esperan hasta el día siguiente.",
     auto: "El cliente recibe respuesta a cualquier hora", tool: "Respuesta automática" },
 ];
+const check = '<path d="M5 12.5l4.2 4.2L19 7"/>';
 ---
 <section class="transform" aria-labelledby="transform-title">
   <div class="wrap">
     <div class="sec-head">
-      <span class="path-tag">innova-tec / <b>antes-y-despues</b></span>
+      <span class="eyebrow">Antes y ahora</span>
       <h2 id="transform-title">Así cambia un día de trabajo</h2>
-      <p class="muted">Lo que hoy haces a mano, comparado línea por línea con lo que hace el flujo. Horas de ejemplo.</p>
+      <p class="muted">Las mismas tareas de siempre, sin que nadie tenga que hacerlas a mano.</p>
     </div>
 
-    <div class="diff" data-animate>
-      <div class="diff-bar">
-        <span>un-dia-de-trabajo.diff</span>
-        <span><em class="del">−4 tareas manuales</em> <em class="add">+4 automáticas</em></span>
+    <div class="swap" data-animate>
+      <div class="swap-head" aria-hidden="true">
+        <span>Hoy, a mano</span>
+        <span>Con Innova Tec</span>
       </div>
-      <ol class="diff-rows">
-        {rows.map((r, i) => (
+      <ol>
+        {rows.map((r) => (
           <li>
-            <div class="diff-del">
-              <span class="ln" aria-hidden="true">{i + 1}</span>
-              <span class="sign" aria-hidden="true">−</span>
-              <p><span class="sr-only">Hoy, a mano: </span><time>{r.time}</time> {r.manual}</p>
-            </div>
-            <div class="diff-add">
-              <span class="ln" aria-hidden="true">{i + 1}</span>
-              <span class="sign" aria-hidden="true">+</span>
-              <p><span class="sr-only">Con automatización: </span><b>{r.auto}</b> <small>{r.tool}</small></p>
+            <p class="swap-before"><span class="sr-only">Hoy, a mano: </span>{r.manual}</p>
+            <div class="swap-after">
+              <span class="swap-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" set:html={check} /></span>
+              <p><span class="sr-only">Con Innova Tec: </span><b>{r.auto}</b><small>{r.tool}</small></p>
             </div>
           </li>
         ))}
       </ol>
-      <p class="diff-result"><span aria-hidden="true">@@</span> Resultado: cada cliente atendido, a cualquier hora. Ventas recibe cada contacto en el momento en que escribe. <span aria-hidden="true">@@</span></p>
+      <p class="swap-result"><b>Resultado:</b> ningún cliente se queda sin respuesta y tu equipo dedica el tiempo a vender, no a copiar datos.</p>
     </div>
   </div>
 </section>

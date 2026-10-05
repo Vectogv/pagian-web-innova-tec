@@ -7,10 +7,10 @@
         <span class="accent">Construimos tu software.</span>
       </h1>
       <div class="hero-side">
-        <p>Para pequeñas y medianas empresas que quieren dejar el trabajo repetitivo y crecer con tecnología propia: flujos con n8n, integraciones y software a medida.</p>
+        <p>Para pequeñas y medianas empresas que quieren dejar el trabajo repetitivo y crecer con tecnología propia: automatizaciones, chatbots y software a medida, explicados sin tecnicismos.</p>
         <div class="actions">
           <a href="/contacto" class="btn btn-primary">Agendar diagnóstico gratuito</a>
-          <a href="#stack" class="btn btn-tertiary">Ver cómo lo construimos</a>
+          <a href="#panel" class="btn btn-tertiary">Ver lo que recibes</a>
         </div>
       </div>
     </div>
@@ -18,11 +18,11 @@
     <div class="console" role="img" aria-label="Simulación de un flujo de automatización ejecutándose: un mensaje entra, se clasifica, se guarda, se factura y se avisa a ventas">
       <div class="console-bar">
         <div class="console-tabs">
-          <span class="on">flujo-ventas</span>
-          <span>facturación</span>
-          <span>agenda</span>
+          <span class="on">Ventas</span>
+          <span>Facturación</span>
+          <span>Agenda</span>
         </div>
-        <span class="console-state">Activo · simulación</span>
+        <span class="console-state">Funcionando · ejemplo</span>
       </div>
       <div class="console-body">
         <div class="hero-graph">
@@ -30,19 +30,19 @@
           <div class="graph-labels" aria-hidden="true"></div>
         </div>
         <div class="console-log">
-          <span class="label">Registro de ejecución</span>
+          <span class="label">Lo que acaba de pasar</span>
           <ol id="exec-log" aria-hidden="true">
-            <li><time>09:14:02</time><span>Nuevo mensaje</span><b>ok</b></li>
-            <li><time>09:14:02</time><span>Clasificar</span><b>ok</b></li>
-            <li><time>09:14:03</time><span>Guardar en Sheets</span><b>ok</b></li>
-            <li><time>09:14:03</time><span>Crear factura</span><b>ok</b></li>
-            <li><time>09:14:04</time><span>Avisar a ventas</span><b>ok</b></li>
+            <li><time>09:14:02</time><span>Nuevo mensaje</span><b>Hecho</b></li>
+            <li><time>09:14:02</time><span>Clasificar</span><b>Hecho</b></li>
+            <li><time>09:14:03</time><span>Guardar en Sheets</span><b>Hecho</b></li>
+            <li><time>09:14:03</time><span>Crear factura</span><b>Hecho</b></li>
+            <li><time>09:14:04</time><span>Avisar a ventas</span><b>Hecho</b></li>
           </ol>
         </div>
       </div>
       <div class="console-foot">
-        <span>n8n · 10 nodos · 4 capas</span>
-        <span>Sin intervención manual</span>
+        <span>Tu negocio trabajando solo, a cualquier hora</span>
+        <span>Sin que nadie tenga que hacerlo a mano</span>
       </div>
     </div>
   </div>
@@ -107,7 +107,7 @@
       if (!logList || reduce) return;
       const li = document.createElement("li");
       const time = new Date().toLocaleTimeString("es", { hour12: false });
-      li.innerHTML = `<time>${time}</time><span></span><b>ok</b>`;
+      li.innerHTML = `<time>${time}</time><span></span><b>Hecho</b>`;
       li.querySelector("span")!.textContent = task;
       logList.append(li);
       while (logList.children.length > 7) logList.firstElementChild!.remove();

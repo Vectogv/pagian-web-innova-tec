@@ -1,50 +1,56 @@
 ---
-// Stack: demuestra que hacemos software de verdad. Código de un paso real del flujo de ventas + capacidades y tecnologías.
-const capabilities = [
-  ["Automatizaciones", "Flujos en n8n con manejo de errores, reintentos y monitoreo."],
-  ["APIs e integraciones", "Webhooks y conectores propios cuando una app no trae integración."],
-  ["Software a medida", "Paneles, inventarios y herramientas internas en web."],
-  ["Datos", "Bases de datos ordenadas y reportes que se generan solos."],
-  ["Despliegue y soporte", "En tu servidor o en la nube, con mantenimiento mensual."],
+// Lo que recibes: un panel de ejemplo (software a medida visto por el dueño del negocio) + entregables en lenguaje claro.
+// Las cifras del panel son de ejemplo y se marcan como tal.
+const deliverables = [
+  ["Tu propio panel", "Pedidos, clientes, inventario y reportes en un solo lugar, desde el computador o el celular."],
+  ["Automatizaciones funcionando", "Las tareas repetitivas se hacen solas, todos los días, sin depender de nadie."],
+  ["Capacitación para tu equipo", "Les enseñamos a usarlo en una sesión, con un manual sencillo."],
+  ["Soporte cuando lo necesites", "Si algo cambia en tu negocio, lo ajustamos contigo."],
 ];
-const tech = ["n8n", "Node.js", "TypeScript", "Python", "PostgreSQL", "REST y webhooks", "Docker", "Astro", "React"];
-
-// Resaltado de sintaxis hecho a mano (sin librerías): k = palabra clave, f = función, s = texto, c = comentario
-const code = [
-  `<span class="c">// Paso del flujo de ventas: llega un mensaje por WhatsApp</span>`,
-  `<span class="k">export async function</span> <span class="f">alRecibirMensaje</span>(msg) {`,
-  `  <span class="k">const</span> tipo = <span class="f">clasificar</span>(msg.texto);   <span class="c">// cotización | soporte | otro</span>`,
-  ``,
-  `  <span class="k">const</span> cliente = <span class="k">await</span> sheets.<span class="f">agregarFila</span>({`,
-  `    nombre: msg.remitente,`,
-  `    telefono: msg.telefono,`,
-  `    tipo,`,
-  `  });`,
-  ``,
-  `  <span class="k">if</span> (tipo === <span class="s">"cotización"</span>) {`,
-  `    <span class="k">await</span> gmail.<span class="f">enviar</span>(<span class="s">"ventas@tuempresa.com"</span>, <span class="f">resumen</span>(cliente));`,
-  `  }`,
-  ``,
-  `  <span class="k">return</span> <span class="f">responder</span>(msg, <span class="s">"¡Recibido! Te escribimos en minutos."</span>);`,
-  `}`,
+const kpis = [["Pedidos hoy", "48"], ["Respondidos", "100%"], ["Facturas enviadas", "36"]];
+const bars = [38, 52, 44, 61, 57, 72, 66]; // altura relativa de cada día
+const days = ["L", "M", "M", "J", "V", "S", "D"];
+const orders = [
+  ["Laura Gómez", "2 almuerzos ejecutivos", "Entregado"],
+  ["Tienda El Sol", "Reposición de inventario", "En camino"],
+  ["Carlos Ruiz", "Cita · jueves 10:00", "Confirmada"],
 ];
 ---
-<section class="stack" id="stack" aria-labelledby="stack-title">
+<section class="panel-sec" id="panel" aria-labelledby="panel-title">
   <div class="wrap">
-    <div class="stack-grid">
-      <div class="stack-text">
-        <span class="path-tag">innova-tec / <b>stack</b></span>
-        <h2 id="stack-title">Software de verdad, no solo plantillas</h2>
-        <p class="muted">Cuando una herramienta no alcanza, escribimos el código. Cada flujo queda documentado y es tuyo.</p>
+    <div class="panel-grid">
+      <div class="panel-text">
+        <span class="eyebrow">Software a tu medida</span>
+        <h2 id="panel-title">Además de automatizar, te entregamos tu propio sistema</h2>
+        <p class="muted">Construimos la herramienta que tú y tu equipo usan cada día, pensada para cómo trabaja tu negocio y no al revés.</p>
         <dl class="caps">
-          {capabilities.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+          {deliverables.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
         </dl>
       </div>
-      <figure class="code-window" aria-label="Ejemplo de código de un paso del flujo de ventas">
-        <div class="code-bar"><span>flujo-ventas / al-recibir-mensaje.ts</span><span class="label">TypeScript</span></div>
-        <pre><code>{code.map((line, i) => <span class="code-line"><span class="ln" aria-hidden="true">{i + 1}</span><span set:html={line || " "} /></span>)}</code></pre>
+
+      <figure class="app" aria-label="Ejemplo de un panel de negocio hecho a medida">
+        <div class="app-bar"><b>Panel · Tu negocio</b><span class="label">Ejemplo</span></div>
+        <div class="app-body">
+          <ul class="app-nav" aria-hidden="true">
+            <li class="on">Inicio</li><li>Pedidos</li><li>Clientes</li><li>Inventario</li><li>Reportes</li>
+          </ul>
+          <div class="app-main">
+            <div class="app-kpis">
+              {kpis.map(([k, v]) => <div><span>{k}</span><b>{v}</b></div>)}
+            </div>
+            <div class="app-chart">
+              <span>Ventas de la semana</span>
+              <div class="bars" aria-hidden="true">
+                {bars.map((h, i) => <i style={`--h:${h}%`}><em>{days[i]}</em></i>)}
+              </div>
+            </div>
+            <ul class="app-list">
+              {orders.map(([who, what, state]) => <li><b>{who}</b><span>{what}</span><em>{state}</em></li>)}
+            </ul>
+          </div>
+        </div>
       </figure>
     </div>
-    <p class="tech"><span class="label">Tecnologías</span> {tech.join(" / ")}</p>
+    <p class="tech">Trabajamos con herramientas profesionales y probadas, como <b>n8n</b>, bases de datos seguras y servidores en la nube. Tú no tienes que preocuparte por eso.</p>
   </div>
 </section>

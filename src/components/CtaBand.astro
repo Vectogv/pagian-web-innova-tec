@@ -1,16 +1,13 @@
 ---
-// Salida: una línea de comandos. La persona escribe la tarea y se abre WhatsApp con el texto listo
+// Salida: la persona escribe la tarea que quiere dejar de hacer y se abre WhatsApp con el texto listo
 import { WHATSAPP } from "../config.js";
 ---
 <section class="outro">
   <div class="wrap">
-    <span class="path-tag">innova-tec / <b>empezar</b></span>
+    <span class="eyebrow">Empecemos</span>
     <h2 class="outro-q"><label for="tarea">¿Qué tarea te gustaría dejar de hacer a mano?</label></h2>
     <form class="outro-form" id="outro-form" data-wa={WHATSAPP} novalidate>
-      <div class="prompt">
-        <span aria-hidden="true">$</span>
-        <input id="tarea" name="tarea" maxlength="300" autocomplete="off" placeholder="copiar los pedidos de WhatsApp a Excel" required>
-      </div>
+      <input id="tarea" name="tarea" maxlength="300" autocomplete="off" placeholder="Ej.: copiar los pedidos de WhatsApp a Excel" required>
       <button class="btn btn-primary" type="submit">Enviar por WhatsApp</button>
       <span class="error" hidden>Escribe la tarea en una frase y te respondemos con una idea para automatizarla.</span>
     </form>
